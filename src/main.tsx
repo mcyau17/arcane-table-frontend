@@ -2,9 +2,21 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
   </StrictMode>,
 )
+
+socket.on("connect", () => {
+  console.log("Connected to server:", socket.id);
+  socket.emit("ping", "Hello server!");
+});
+
+socket.on("pong", (msg) => {
+  console.log("Received from server:", msg);
+});
